@@ -46,7 +46,7 @@ jobs:
       - name: Run cargo-bisect-rustc
         run: |
           cd ${{ env.test-project-dir }}
-          cargo bisect-rustc --regress="cargo run" \
+          cargo bisect-rustc --regress="success" \
             --access=checkout \
             --start=1.70.0 --end=nightly
         working-directory: ${{ env.test-project-dir }}
