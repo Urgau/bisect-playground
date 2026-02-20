@@ -32,9 +32,9 @@ jobs:
 
           [dependencies]
           EOF
-          cat input.rs
           cat Cargo.toml
           cat src/main.rs
+          cat src/input.rs
           cargo build || true
           echo "test-project-dir=$(pwd)" >> $GITHUB_ENV
 
