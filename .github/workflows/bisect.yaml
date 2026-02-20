@@ -14,9 +14,18 @@ jobs:
     steps:
       - name: Fast clone Rust repository
         run: |
-          git clone --depth 1 --single-branch --no-tags \
-            https://github.com/rust-lang/rust.git rust
+          curl -L \
+            https://github.com/rust-lang/rust/archive/refs/heads/master.tar.gz \
+            | tar -xz --strip-components=1 -C rust
           echo "RUST_SRC_REPO=$(pwd)/rust" >> $GITHUB_ENV
+
+      - name: Install rustup and stable toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+
+      - name: Cache Rust dependencies
+        uses: swatinem/rust-cache@v2
 
       - name: Create test project from URL
         run: |
@@ -35,13 +44,8 @@ jobs:
           EOF
           echo "test-project-dir=$(pwd)" >> $GITHUB_ENV
 
-      - name: Install rustup and stable toolchain
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          toolchain: stable
-
-      - name: Install cargo-bisect-rustc
-        run: cargo install cargo-bisect-rustc
+      - name: Install cargo-bisect-rustc with locked deps
+        run: cargo install cargo-bisect-rustc --locked
 
       - name: Run cargo-bisect-rustc
         run: |
