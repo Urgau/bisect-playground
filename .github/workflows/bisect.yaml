@@ -47,6 +47,6 @@ jobs:
           pwd
           cargo bisect-rustc --regress="error" \
             --access=github \
-            --start=1.70.0 -v -- run
+            --start=1.80.0 -v -- run
         working-directory: ${{ env.test-project-dir }}
 
