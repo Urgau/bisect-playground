@@ -22,10 +22,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
         with:
           toolchain: stable
-
-      - name: Cache Rust dependencies
-        uses: swatinem/rust-cache@v2
-
+          
       - name: Create test project from URL
         run: |
           mkdir test-project
@@ -45,6 +42,9 @@ jobs:
 
       - name: Install cargo-bisect-rustc with locked deps
         run: cargo install cargo-bisect-rustc --locked
+
+      - name: Cache Rust dependencies
+        uses: swatinem/rust-cache@v2
 
       - name: Run cargo-bisect-rustc
         run: |
