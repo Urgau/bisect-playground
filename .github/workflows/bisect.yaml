@@ -51,7 +51,7 @@ jobs:
           cd ${{ env.test-project-dir }}
           cargo bisect-rustc --regress="success" \
             --access=checkout \
-            --start=1.70.0 --end=nightly
+            --start=1.70.0
         working-directory: ${{ env.test-project-dir }}
         env:
           RUST_SRC_REPO: ${{ env.RUST_SRC_REPO }}
