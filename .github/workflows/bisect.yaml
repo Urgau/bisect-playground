@@ -1,0 +1,55 @@
+name: Bisect Rustc from URL Content
+
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: 'URL containing the code to bisect (raw Rust file)'
+        required: true
+        type: string
+
+jobs:
+  bisect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fast clone Rust repository
+        run: |
+          git clone --depth 1 --single-branch --no-tags \
+            https://github.com/rust-lang/rust.git rust
+          echo "RUST_SRC_REPO=$(pwd)/rust" >> $GITHUB_ENV
+
+      - name: Create test project from URL
+        run: |
+          mkdir test-project
+          cd test-project
+          curl -L "${{ github.event.inputs.url }}" > input.rs
+          mkdir src
+          echo 'fn main() { include!("input.rs"); }' > src/main.rs
+          cat > Cargo.toml << 'EOF'
+          [package]
+          name = "test-project"
+          version = "0.1.0"
+          edition = "2021"
+
+          [dependencies]
+          EOF
+          echo "test-project-dir=$(pwd)" >> $GITHUB_ENV
+
+      - name: Install rustup and stable toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+
+      - name: Install cargo-bisect-rustc
+        run: cargo install cargo-bisect-rustc
+
+      - name: Run cargo-bisect-rustc
+        run: |
+          cd ${{ env.test-project-dir }}
+          cargo bisect-rustc --regress="cargo check" \
+            --access=checkout \
+            --start=1.70.0 --end=nightly
+        working-directory: ${{ env.test-project-dir }}
+        env:
+          RUST_SRC_REPO: ${{ env.RUST_SRC_REPO }}
+
