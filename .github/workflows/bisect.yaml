@@ -12,12 +12,6 @@ jobs:
   bisect:
     runs-on: ubuntu-latest
     steps:
-      - name: Fast clone Rust repository
-        run: |
-          git clone --single-branch \
-            https://github.com/rust-lang/rust.git rust
-          echo "RUST_SRC_REPO=$(pwd)/rust" >> $GITHUB_ENV
-
       - name: Install rustup and stable toolchain
         uses: dtolnay/rust-toolchain@stable
         with:
@@ -54,9 +48,7 @@ jobs:
         run: |
           cd ${{ env.test-project-dir }}
           cargo bisect-rustc --regress="error" \
-            --access=checkout \
+            --access=github \
             --start=1.70.0 -- run
         working-directory: ${{ env.test-project-dir }}
-        env:
-          RUST_SRC_REPO: ${{ env.RUST_SRC_REPO }}
 
