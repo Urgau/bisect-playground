@@ -27,8 +27,8 @@ jobs:
         run: |
           mkdir test-project
           cd test-project
-          curl -L "${{ github.event.inputs.url }}" > input.rs
           mkdir src
+          curl -L "${{ github.event.inputs.url }}" > input.rs
           echo 'fn main() { include!("input.rs"); }' > src/main.rs
           cat > Cargo.toml << 'EOF'
           [package]
@@ -38,6 +38,10 @@ jobs:
 
           [dependencies]
           EOF
+          cat input.rs
+          cat Cargo.toml
+          cat src/main.rs
+          cargo build
           echo "test-project-dir=$(pwd)" >> $GITHUB_ENV
 
       - name: Install cargo-bisect-rustc with locked deps
