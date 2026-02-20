@@ -22,7 +22,7 @@ jobs:
           mkdir test-project
           cd test-project
           mkdir src
-          curl -L "${{ github.event.inputs.url }}" > input.rs
+          curl -L "${{ github.event.inputs.url }}" > src/input.rs
           echo 'fn main() { include!("input.rs"); }' > src/main.rs
           cat > Cargo.toml << 'EOF'
           [package]
