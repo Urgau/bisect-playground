@@ -24,7 +24,7 @@ jobs:
           mkdir src
           echo 'fn main() {' > src/main.rs
           curl -L "${{ github.event.inputs.url }}" >> src/main.rs
-          echo '}' > src/main.rs
+          echo '}' >> src/main.rs
           cat > Cargo.toml << 'EOF'
           [package]
           name = "test-project"
