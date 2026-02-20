@@ -14,10 +14,8 @@ jobs:
     steps:
       - name: Fast clone Rust repository
         run: |
-          mkdir rust
-          curl -L \
-            https://github.com/rust-lang/rust/archive/refs/heads/master.tar.gz \
-            | tar -xz --strip-components=1 -C rust
+          git clone --single-branch \
+            https://github.com/rust-lang/rust.git rust
           echo "RUST_SRC_REPO=$(pwd)/rust" >> $GITHUB_ENV
 
       - name: Install rustup and stable toolchain
