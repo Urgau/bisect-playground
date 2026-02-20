@@ -35,20 +35,18 @@ jobs:
           EOF
           cat Cargo.toml
           cat src/main.rs
-          cargo build || true
+          cargo run || true
           echo "test-project-dir=$(pwd)" >> $GITHUB_ENV
 
       - name: Install cargo-bisect-rustc with locked deps
         run: cargo install cargo-bisect-rustc --locked
 
-      - name: Cache Rust dependencies
-        uses: swatinem/rust-cache@v2
-
       - name: Run cargo-bisect-rustc
         run: |
           cd ${{ env.test-project-dir }}
+          pwd
           cargo bisect-rustc --regress="error" \
             --access=github \
-            --start=1.70.0 -- run
+            --start=1.70.0 -v -- run
         working-directory: ${{ env.test-project-dir }}
 
