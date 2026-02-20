@@ -35,7 +35,7 @@ jobs:
           cat input.rs
           cat Cargo.toml
           cat src/main.rs
-          cargo build
+          cargo build || true
           echo "test-project-dir=$(pwd)" >> $GITHUB_ENV
 
       - name: Install cargo-bisect-rustc with locked deps
